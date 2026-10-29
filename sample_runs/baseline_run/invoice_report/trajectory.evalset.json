@@ -1,0 +1,35 @@
+{
+  "eval_set_id": "invoice_report",
+  "name": "invoice_report trajectory",
+  "description": "Actual trajectory the agent took on task 'invoice_report'. Harvested from session events; the task is graded out-of-band by tasks/invoice_report/tests/hidden.py.",
+  "eval_cases": [
+    {
+      "eval_id": "invoice_report",
+      "conversation": [
+        {
+          "invocation_id": "e-0d4f33d7-1951-4be1-aab3-429eeab055f9",
+          "user_content": {
+            "parts": [
+              {
+                "text": "Invoice totals come out short.\n\n`invoice_total(amounts)` in `src/invoices/report.py` adds up the line amounts, but a $19.99 line and a $5.50 line total $24.00 instead of $25.49 -- the cents are being lost. Please fix the root cause so totals are exact."
+              }
+            ],
+            "role": "user"
+          },
+          "intermediate_data": {
+            "invocation_events": []
+          },
+          "creation_timestamp": 1793263324.375363
+        }
+      ],
+      "session_input": {
+        "app_name": "InMemoryRunner",
+        "user_id": "student",
+        "state": {}
+      },
+      "creation_timestamp": 0.0,
+      "final_session_state": {}
+    }
+  ],
+  "creation_timestamp": 0.0
+}

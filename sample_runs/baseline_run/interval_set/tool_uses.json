@@ -1,0 +1,24 @@
+[
+  {
+    "invocation_id": "e-e9095d1b-6d2a-422a-8739-e58a58371c0e",
+    "tool_uses": [
+      {
+        "id": "call_49540",
+        "args": {
+          "contents": "import sys\nimport argparse\nfrom decimal import Decimal, ROUND_HALF_UP\n\ndef normalize_decimal(d):\n    \"\"\"Convert decimal to string, removing trailing zeros.\"\"\"\n    return f\"{d:f}\".rstrip('0').rstrip('.') if '.' in f\"{d:f}\" else f\"{d:f}\"\n\ndef merge_intervals(intervals):\n    \"\"\"\n    Merge overlapping or touching intervals.\n    Intervals are (start, end) tuples of Decimals.\n    \"\"\"\n    if not intervals:\n        return []\n    \n    # Sort by start time\n    intervals.sort()\n    \n    merged = []\n    curr_start, curr_end = intervals[0]\n    \n    for next_start, next_end in intervals[1:]:\n        # If the next interval starts before or exactly at the end of the current one\n        if next_start <= curr_end:\n            # Merge\n            curr_end = max(curr_end, next_end)\n        else:\n            # Push current and move to next\n            merged.append((curr_start, curr_end))\n            curr_start, curr_end = next_start, next_end\n            \n    merged.append((curr_start, curr_end))\n    return merged\n\ndef parse_intervals():\n    intervals = []\n    for line in sys.stdin:\n        line = line.strip()\n        if not line:\n            continue\n        try:\n            parts = line.split()\n            if len(parts) != 2:\n                raise ValueError\n            start, end = Decimal(parts[0]), Decimal(parts[1])\n            if start > end:\n                raise ValueError\n            intervals.append((start, end))\n        except:\n            sys.stderr.write(\"Input error: Invalid interval format or constraints\\n\")\n            sys.exit(2)\n    return intervals\n\ndef main():\n    parser = argparse.ArgumentParser(description=\"Interval set operations\")\n    subparsers = parser.add_subparsers(dest=\"command\", required=True)\n    \n    # Merge command\n    subparsers.add_parser('merge')\n    \n    # Count command\n    subparsers.add_parser('count')\n    \n    # Length command\n    subparsers.add_parser('length')\n    \n    # Covers command\n    covers_parser = subparsers.add_parser('covers')\n    covers_parser.add_argument('X', type=Decimal)\n    \n    # Parse initial command\n    # We allow unknown args or handle validation manually because standard argparse \n    # structure is slightly tricky with the specific CLI format required.\n    # Actually, sys.argv[1] is the command.\n    \n    if len(sys.argv) < 2:\n        sys.stderr.write(\"Usage error: Missing command\\n\")\n        sys.exit(2)\n\n    try:\n        args = parser.parse_args()\n    except SystemExit:\n        sys.stderr.write(\"Usage error: Invalid command\\n\")\n        sys.exit(2)\n\n    intervals = parse_intervals()\n    merged = merge_intervals(intervals)\n\n    if args.command == 'merge':\n        for start, end in merged:\n            print(f\"{normalize_decimal(start)} {normalize_decimal(end)}\")\n            \n    elif args.command == 'count':\n        print(len(merged))\n        \n    elif args.command == 'length':\n        total = sum((end - start for start, end in merged), Decimal(0))\n        # Round half-up to 2 decimals: '0.01' quantize\n        rounded = total.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)\n        print(f\"{rounded:.2f}\")\n        \n    elif args.command == 'covers':\n        X = args.X\n        found = False\n        for start, end in merged:\n            if start <= X <= end:\n                found = True\n                break\n        print(\"yes\" if found else \"no\")\n\nif __name__ == \"__main__\":\n    main()\n",
+          "path": "src/intervals.py"
+        },
+        "name": "write_file"
+      }
+    ],
+    "tool_responses": [
+      {
+        "id": "call_49540",
+        "name": "write_file",
+        "response": {
+          "result": "Wrote 3386 chars to src/intervals.py"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "score": 100,
+  "verdict": "pass",
+  "criteria": {
+    "execution_tool": 40,
+    "verification": 20,
+    "root_cause": 20,
+    "edge_cases": 20
+  },
+  "auto_fail": null,
+  "rationale": "The agent provides full sandboxed execution via `_run_command` and `_run_python` (lines 97-153, 201-207), capturing `returncode`, `stdout`, and `stderr` while supporting `stdin_data` to drive CLI programs. Its `SYSTEM_INSTRUCTION` enforces verification discipline (lines 174-178) requiring bug reproduction and end-to-end CLI testing before finishing. For root-cause analysis, `list_files` and `search_code` tools (lines 53-94, 185-191) are paired with explicit instructions (lines 158-163) to inspect all sibling parsing/loading modules and trace data flow upstream rather than trusting the prompt-named file. Finally, lines 165-172 systematically enumerate edge-case and formatting traps—including descending ranges (`9-7 -> 9 8 7`), `Decimal` half-up rounding (`ROUND_HALF_UP`), safe trailing-zero trimming, empty input handling, and exact exit codes on `stderr`—carrying a full pass across all five eval tasks."
+}

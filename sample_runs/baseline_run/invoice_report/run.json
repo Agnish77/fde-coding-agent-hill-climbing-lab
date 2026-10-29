@@ -1,0 +1,9 @@
+{
+  "task_id": "invoice_report",
+  "model": "gemini-3.1-flash-lite",
+  "passed": false,
+  "tool_calls": 0,
+  "seconds": 10.6,
+  "stop_reason": "error",
+  "detail": "[Errno -3] Temporary failure in name resolution"
+}

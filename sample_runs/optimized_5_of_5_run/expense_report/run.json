@@ -1,0 +1,9 @@
+{
+  "task_id": "expense_report",
+  "model": "gemini-3.1-flash-lite",
+  "passed": true,
+  "tool_calls": 12,
+  "seconds": 31.8,
+  "stop_reason": "completed",
+  "detail": ""
+}

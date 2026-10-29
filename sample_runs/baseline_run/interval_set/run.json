@@ -1,0 +1,9 @@
+{
+  "task_id": "interval_set",
+  "model": "gemini-3.1-flash-lite",
+  "passed": true,
+  "tool_calls": 1,
+  "seconds": 12.3,
+  "stop_reason": "completed",
+  "detail": ""
+}

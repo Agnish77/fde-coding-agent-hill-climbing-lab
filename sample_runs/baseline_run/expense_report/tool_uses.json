@@ -1,0 +1,24 @@
+[
+  {
+    "invocation_id": "e-f2198181-ab5a-4505-98aa-803f5bf40d3b",
+    "tool_uses": [
+      {
+        "id": "call_71298",
+        "args": {
+          "path": "src/ledger.py",
+          "contents": "import sys\nimport csv\nfrom decimal import Decimal, ROUND_HALF_UP\nfrom collections import defaultdict\n\ndef format_money(amount):\n    \"\"\"Formats a Decimal to a string with 2 decimal places, rounded half-up.\"\"\"\n    return f\"{amount.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP):.2f}\"\n\ndef parse_input():\n    \"\"\"Reads expense records from stdin.\"\"\"\n    records = []\n    try:\n        reader = csv.reader(sys.stdin)\n        for line_no, row in enumerate(reader, 1):\n            if not row:  # skip blank lines\n                continue\n            \n            if len(row) != 3:\n                print(f\"Error: Malformed record at line {line_no}\", file=sys.stderr)\n                sys.exit(2)\n            \n            date, category, amount_str = row\n            try:\n                amount = Decimal(amount_str)\n            except:\n                print(f\"Error: Invalid amount at line {line_no}\", file=sys.stderr)\n                sys.exit(2)\n            \n            records.append({'category': category.strip(), 'amount': amount})\n    except Exception as e:\n        print(f\"Error parsing input: {e}\", file=sys.stderr)\n        sys.exit(2)\n    return records\n\ndef process_categories(records):\n    \"\"\"Sums amounts per category.\"\"\"\n    totals = defaultdict(Decimal)\n    for r in records:\n        totals[r['category']] += r['amount']\n    \n    # Sort: amount descending, then category ascending\n    # We use -amount for descending, and name for ascending\n    sorted_items = sorted(totals.items(), key=lambda x: (-x[1], x[0]))\n    return sorted_items\n\ndef main():\n    if len(sys.argv) < 2:\n        print(\"Usage: ledger.py <command> [args]\", file=sys.stderr)\n        sys.exit(2)\n\n    command = sys.argv[1]\n    records = parse_input()\n\n    if command == \"total\":\n        total = sum((r['amount'] for r in records), Decimal('0'))\n        print(format_money(total))\n    \n    elif command == \"count\":\n        print(len(records))\n    \n    elif command == \"average\":\n        if not records:\n            print(\"0.00\")\n        else:\n            total = sum((r['amount'] for r in records), Decimal('0'))\n            avg = total / len(records)\n            print(format_money(avg))\n    \n    elif command == \"categories\":\n        for cat, total in process_categories(records):\n            print(f\"{cat}: {format_money(total)}\")\n            \n    elif command == \"top\":\n        if len(sys.argv) < 3:\n            print(\"Usage: ledger.py top <N>\", file=sys.stderr)\n            sys.exit(2)\n        try:\n            n = int(sys.argv[2])\n        except ValueError:\n            print(\"Error: N must be an integer\", file=sys.stderr)\n            sys.exit(2)\n            \n        for cat, total in process_categories(records)[:n]:\n            print(f\"{cat}: {format_money(total)}\")\n            \n    elif command == \"category\":\n        if len(sys.argv) < 3:\n            print(\"Usage: ledger.py category <NAME>\", file=sys.stderr)\n            sys.exit(2)\n        \n        target_cat = sys.argv[2]\n        found = False\n        total = Decimal('0')\n        for r in records:\n            if r['category'] == target_cat:\n                total += r['amount']\n                found = True\n        \n        if not found:\n            # The prompt says: \"If there is no such category, print an error to stderr and exit 1.\"\n            print(f\"Error: Category '{target_cat}' not found\", file=sys.stderr)\n            sys.exit(1)\n        else:\n            print(format_money(total))\n            \n    else:\n        print(f\"Error: Unknown command '{command}'\", file=sys.stderr)\n        sys.exit(2)\n\nif __name__ == \"__main__\":\n    main()\n"
+        },
+        "name": "write_file"
+      }
+    ],
+    "tool_responses": [
+      {
+        "id": "call_71298",
+        "name": "write_file",
+        "response": {
+          "result": "Wrote 3589 chars to src/ledger.py"
+        }
+      }
+    ]
+  }
+]

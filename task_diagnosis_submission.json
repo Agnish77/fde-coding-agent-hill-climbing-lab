@@ -1,0 +1,13 @@
+{
+  "task": "invoice_report",
+  "observed_mode": "Mode A — total stays 124 / cents still lost / the fix didn't take",
+  "description": "For invoice_report, I observed that the agent only read and edited src/invoices/report.py (and wrote reproduce_bug.py and run_repro.py scripts that it had no way to execute), never opening or inspecting src/invoices/load.py where parse_amount actually truncates amounts with int(float(raw)), leaving the total at 124.0 instead of 125.49; the coding agent failed because it lacked directory listing/code search tools and root-cause instructions to trace the data flow upstream beyond the file named in the prompt, and lacked a code execution tool to run tests and verify whether its edit fixed the bug.",
+  "score": 100,
+  "criteria": {
+    "capability_gap_and_mechanism": 60,
+    "specificity": 25,
+    "consequence_or_remediation": 15
+  },
+  "verdict": "accepted",
+  "timestamp": "2026-10-29T08:44:00Z"
+}
